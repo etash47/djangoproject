@@ -1,0 +1,120 @@
+<head>
+		<title>CalNet Login</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!--These are all from a bootstrap template, most of them are not being used-->
+
+
+		<!--===============================================================================================-->
+		<link rel="icon" type="image/png" href="/static/login/images/icons/favicon.ico" />
+		<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="/static/login/vendor/bootstrap/css/bootstrap.min.css">
+		<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="/static/login/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+		<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="/static/login/fonts/iconic/css/material-design-iconic-font.min.css">
+		<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="/static/login/vendor/animate/animate.css">
+		<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="/static/login/vendor/css-hamburgers/hamburgers.min.css">
+		<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="/static/login/vendor/animsition/css/animsition.min.css">
+		<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="/static/login/vendor/select2/select2.min.css">
+		<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="/static/login/vendor/daterangepicker/daterangepicker.css">
+		<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="/static/login/css/util.css">
+		<link rel="stylesheet" type="text/css" href="/static/login/css/main.css">
+		<!--===============================================================================================-->
+	</head>
+	
+	
+	
+	
+	{% block content %}
+	
+
+	<div class="limiter"> <!--limiter is a bootstrap class-->
+		<div class="container-login100" style="background-image: url('/static/login/images/icons/flatiron.jpg');"> <!--bootstrap class-->
+			<div class="wrap-login100"><!--bootstrap class-->
+				<form class="login100-form validate-form" method="post"> <!--POST method must be in form for the Authenticate Function to work (see login/views.py)-->
+					<span class="login100-form-logo">
+						<img src="/static/login/images/icons/NIST_LOGO.png" width="90" height:auto>
+					</span>
+	
+					<span class="login100-form-title p-b-14 p-t-27"> <!--bootstrap class-->
+						Calnet Beta
+					</span>
+	
+					<span class="login100-form-subtitle p-b-34 p-t-10"> <!--bootstrap class-->
+						Log In
+					</span>
+	
+					{% csrf_token %} <!--Part of Django/Jinja authentication: secure login-->
+	
+
+					<!--
+						Here, I am using the bootstrap input100-username class for a stylistic feel, BUT IM ALSO
+						using the id and name "username" to access the default protocol for a username field in the
+						Django form (POST method form). Didn't put "username" in the class in order to override the
+						character field's deafault CSS (which is ugly)
+					-->
+					<div class="wrap-input100 validate-input" data-validate="Enter username">
+						<input id="username" class="input100" type="text" name="username" placeholder="Username"> 
+						<span class="focus-input100" data-placeholder="&#xf207;">
+						</span>
+				
+					</div>
+	
+					<!--Jinja Script to access errors for the specific "username" field (which has index 1 in the form)-->
+					{% for field in form %} 
+					{% if forloop.counter == 1 %}
+						{% for error in field.errors %}
+							<small style="color: red">{{ error }}</small>
+							<br>
+						{% endfor %} 
+					{% endif %}
+					{% endfor %}
+	
+					<!--repeated from above except with "password"-->
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+						<input id="password" class="input100" type="password" name="password" placeholder="Password">
+						<span class="focus-input100" data-placeholder="&#xf191;">
+							
+						</span>
+					</div>
+					
+					{% for field in form %} 
+					{% if forloop.counter == 2 %}
+						{% for error in field.errors %}
+							<small style="color: red">{{ error }}</small>
+							<br>
+						{% endfor %}
+					{% endif %}
+					{% endfor %}
+
+					{% if form.errors %}
+						<small style="color: red">Login failed. Please try again.</small>
+					{% endif %}
+	
+					<div class="container-login100-form-btn p-t-20">
+						<button type="submit" class="login100-form-btn">Log in</button>
+					</div>
+	
+					<div class="text-center p-t-20">
+						<a class="txt1" href="#">
+							Don't have a login?
+							<u>
+								<a href="/login/newuser" class="txt1">Create an account here</a>
+							</u>
+						</a>
+					</div>
+	
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	{% endblock %}

@@ -1,0 +1,174 @@
+
+{% extends 'index.html' %}
+{% load staticfiles %}
+
+    {% block metahead %}
+    <meta charset="UTF-8">
+    {% endblock %}
+    {% block title %}
+    {{user}}:{{template }}
+    {% endblock %}
+{% block pagehead %}
+<style>
+    table,tr,td {border: 1px solid black;
+    border-collapse: collapse;
+    text-align:right;
+    padding: 5px;}
+
+    #inputTable {    border-radius: 25px;
+    border: 10px solid #73AD21;
+    padding: 10px;}
+
+</style>
+{% endblock %}
+{% block content %}
+<h1>Greetings {{user}} this is the {{template}} page </h1>
+the time at which {{template}} was called {{time}}
+{% autoescape off%}
+<div id="inputTable">
+<table>
+    <tr>
+    <td>
+<form id="value-submit">
+    <table class=".table-bordered">
+        <tr><td>
+  Equation: <input id="equation" type="text" name="equation" value="m*x+b" size="50"/>
+        </td></tr>
+   <tr><td>Variable <input id="variables" type="text" name="variables" value="x" /></td></tr>
+   <tr><td >Parameters <input id="parameters" type="text" name="parameters" value="m b" />
+       <input id="submitParameters" type="submit" value="Update Parameters"></td></tr>
+        <tr><td id="parameterTableData"></td></tr>
+
+        <tr><td>x min: <input type="number" name="x_min" value="-1" /></td></tr>
+   <tr><td>x max: <input type="number" name="x_max" value="1" /></td></tr>
+        <tr><td>number of points:<input type="number" name="numberPoints" value="100" /></td></tr>
+        <tr><td>format:<input type="text" name="format" value="r-x" /></td></tr>
+   <tr><td style="text-align:center"><input id="submitButton" type="submit" value="Update Plot"></td></tr>
+        </table>
+</form>
+    </td>
+        <td>
+<p id="demo"></p>
+</td>
+</tr>
+</table>
+
+
+<p id="link"></p>
+{{ form }}
+<hr/>
+{{download_link}}
+</div>
+{% endautoescape %}
+{% endblock %}
+{% block bodyscripts %}
+<script>
+function updateParameterList(){
+    var form=document.getElementById('parameterTableData');
+    while (form.firstChild) {
+    form.removeChild(form.firstChild);
+    }
+    var parameters=document.getElementById('parameters');
+    var text=parameters.value;
+    var parameter_list=text.trim().split(/\s+/);
+    for(i=0;i<parameter_list.length;i++){
+        // Create an <input> element, set its type and name attributes
+                form.appendChild(document.createTextNode(parameter_list[i]+" : "));
+                var input = document.createElement("input");
+                input.type = "number";
+                input.name = parameter_list[i];
+                input.value=1;
+                form.appendChild(input);
+                // Append a line break
+                form.appendChild(document.createElement("br"));}
+                };
+ updateParameterList();
+$('#submitParameters').click(function(e){
+    e.preventDefault();
+    updateParameterList();
+});
+$('#equation').keydown(function(e){
+if (e.which===13){
+var equation=document.getElementById('equation');
+equationText=equation.value;
+var variables=document.getElementById('variables').value;
+var variablesRegex=new RegExp(variables+"(?!\\w)",'g');
+console.log(variablesRegex);
+
+var newParameterList=equationText.replace(/(\W|sin|exp|cos|log|abs|\d|-|\\+)/g," ");
+newParameterList=newParameterList.replace(/\s+/," ");
+newParameterList=newParameterList.replace(variablesRegex,"");
+newParameterArray =  $.unique(newParameterList.split(/\s+/));
+newParameterList = newParameterArray.join(" ");
+var parameterInput=document.getElementById('parameters');
+parameterInput.value=newParameterList.trim();
+updateParameterList();
+}
+});
+
+
+
+
+</script>
+
+<script>
+//using jQuery
+// Function to recover the cookie delivered by Django
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+// Define csrftoken in the document scope
+var csrftoken = getCookie('csrftoken');
+
+
+// run this once the document has loaded
+  $(document).ready(function() {
+             var posturl;
+             posturl="{% url 'not_index' template='move' %}";
+            url="{% static 'Test_App/img'%}";
+
+// Ajax call for the submit button
+    $('#submitButton').click(function(e) {
+      e.preventDefault();
+      var button = document.getElementById('submitButton');
+      button.disabled=true
+      var request= new XMLHttpRequest();
+      var form = document.getElementById('value-submit')
+      var formData= new FormData(form)
+      request.open("POST",posturl,true);
+      //append the data you want to send to the server here
+      formData.append("csrfmiddlewaretoken",csrftoken); // This works, I am not sure why the header method does not
+      request.send(formData);
+
+ // This executes the function on response from server
+      request.onreadystatechange=function() {
+  if (this.readyState == 4 && this.status == 200) {
+     //console.log(this.responseText);
+    var response = JSON.parse(this.responseText);
+    document.getElementById("demo").innerHTML = response['content'];
+    document.getElementById("link").innerHTML = response['download_link'];
+    var button = document.getElementById('submitButton');
+    button.disabled=false
+
+  }
+};
+
+
+    });
+  });
+
+</script>
+
+{% endblock %}

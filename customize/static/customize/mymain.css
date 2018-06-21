@@ -1,0 +1,12 @@
+.optionsPane{
+    background: linear-gradient(#52ffa886, #00a365);
+    height:200px;
+    width:200px;
+    border-radius: 25px;
+    padding: 20px 20px;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    margin: 50px;
+    display: inline;
+}

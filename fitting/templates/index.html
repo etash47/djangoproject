@@ -1,0 +1,54 @@
+{% load i18n %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{% block title %}User test{% endblock %}</title>
+    {% block headmeta %}{% endblock %}
+    {% block sitehead %}
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- It is important to put the bootstrap scripts in the head -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    {% endblock %}
+    {% block pagehead %}
+    <meta http-equiv="refresh" content="0; URL='/fitting/not_index'"/>
+    {% endblock %}
+</head>
+
+<body>
+    {% block nav %}
+    {% endblock %}
+
+      <div class="container-fluid " id="content">
+          <div class="row">
+        {% block content %}
+
+            {% if user == "AnonymousUser" %}
+
+            <script type="text/javascript">
+                window.location = "http://www.google.com/";
+            </script>
+
+            {% endif %}
+        
+          <div><h1> Welcome to a Test Site, {{user}} </h1>
+            <a href="not_index">Go to Fitting Application if not automatically redirected</a>
+        <hr/>
+        </div>
+        {% endblock %}
+        </div>
+        </div>
+        <div id="footer">
+        {% block footer %}
+            <hr />
+        {% endblock %}
+        </div>
+    {% block bodyscripts %}
+    {% endblock %}
+</body>
+
+</html>

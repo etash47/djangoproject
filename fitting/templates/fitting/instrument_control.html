@@ -1,0 +1,371 @@
+{% extends 'index.html' %} {% load staticfiles %} {% block metahead %}
+<meta charset="UTF-8"> {% endblock %} {% block title %} {{user}}:{{template }} {% endblock %} {% block pagehead %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+<style>
+    table,
+    tr,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: right;
+        padding: 15px;
+    }
+
+    .toggleButton {
+        background-color: white;
+        border: 2px solid black;
+        border-radius: 8px;
+        color: red;
+    }
+
+    .toggleButton:hover {
+        box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    #fitData,
+    #takeData,
+    #downloadData {
+        display: none
+    }
+
+    .heading {
+        font-weight: bold;
+        text-align: left;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="/static/fitting/mymain.css">
+
+<link rel="stylesheet" href="/static/fitting/w3css.css"> 
+
+{% if not user.is_authenticated %}
+
+<meta http-equiv="refresh" content="0; URL='/login/'" />
+
+{% endif %}
+
+{% endblock %} {% block content %}
+<div style="margin-left:15%">
+    <div class="w3-container w3-mygreen">
+        <h1>Greetings {{user}} this is the Fitting AND ACQUISITION page </h1>
+    </div>
+    the time at which {{template}} was called {{time}}
+</div>
+{% autoescape off%}
+<h3>Acquire Data
+    <input type="button" class="toggleButton" value="+" onclick="toggleId('takeData',this)">
+</h3>
+<table id="takeData">
+
+    <td>
+        <form id="value-submit">
+            <table class=".table-bordered">
+                <tr>
+                    <td>Sample Name
+                        <input id="sampleName" type="text" name="sampleName" value="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Notes
+                        <textarea id="notes" type="text" name="notes" value="" form="value-submit"></textarea>
+                        <tr>
+                            <td>Bowtie:
+                                <input type="checkbox" name="bowtie" value="bowtie" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Voltage Min:
+                                <input type="number" name="vMin" value="-1" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Voltage max:
+                                <input type="number" name="vMax" value="1" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>number of points:
+                                <input type="number" name="numberPoints" value="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>format:
+                                <input type="text" name="format" value="r-x" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center">
+                                <input id="submitButton" type="submit" value="Take IV" class="btn btn-primary">
+                            </td>
+                        </tr>
+            </table>
+        </form>
+        </td>
+        <td>
+            <p id="demo"></p>
+        </td>
+</table>
+<p id="link"></p>
+<h3> Fit Data
+    <input type="button" class="toggleButton" value="+" onclick="toggleId('fitData',this)">
+</h3>
+<table id="fitData">
+
+    <td>
+        <form id="fit-submit">
+            <table class=".table-bordered">
+                <tr>
+                    <td>
+                        Equation:
+                        <input id="equation" type="text" name="equation" value="m*x+b" size="50" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Variable
+                        <input id="variables" type="text" name="variables" value="x" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Parameters
+                        <input id="parameters" type="text" name="parameters" value="m b" />
+                        <input id="submitParameters" type="submit" value="Update Parameters" class="btn btn-primary">
+                    </td>
+                </tr>
+                <tr>
+                    <td id="parameterTableData"></td>
+                </tr>
+
+                <tr>
+                    <td>x min:
+                        <input type="number" name="x_min" value="-1" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>x max:
+                        <input type="number" name="x_max" value="1" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>number of points:
+                        <input type="number" name="numberPoints" value="100" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>format:
+                        <input type="text" name="format" value="r-x" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center">
+                        <input id="fitSubmit" type="submit" value="Update Plot" class="btn btn-primary">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </td>
+    <td>
+        <p id="fitDisplay"></p>
+    </td>
+</table>
+<p id="fitLink"></p>
+
+<h3>Download Data
+    <input type="button" class="toggleButton" value="+" onclick="toggleId('downloadData',this)">
+</h3>
+<table id="downloadData">
+    <tr>
+        <td class="heading">Measurement:</td>
+        <td id="measurementDownload"></td>
+    </tr>
+    <tr>
+        <td class="heading">State:</td>
+        <td id="stateDownload"></td>
+    </tr>
+    <tr>
+        <td class="heading">Complete Measurement:</td>
+        <td id="completeDownload"></td>
+    </tr>
+</table>
+{{download_link}} {% endautoescape %} {% endblock %} {% block bodyscripts %}
+<script>
+
+    $('#submitParameters').click(function (e) {
+        e.preventDefault();
+        updateParameterList();
+    });
+
+
+
+
+
+</script>
+
+<script>
+    //using jQuery
+    // Function to recover the cookie delivered by Django
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    // Define csrftoken in the document scope
+    var csrftoken = getCookie('csrftoken');
+
+
+    // run this once the document has loaded
+    $(document).ready(function () {
+        var posturl;
+        posturl = "{% url 'instrument_control' template='move' %}";
+        url = "{% static 'Test_App/img'%}";
+
+        // Ajax call for the submit button
+        $('#submitButton').click(function (e) {
+            e.preventDefault();
+            var button = document.getElementById('submitButton');
+            button.disabled = true
+            var request = new XMLHttpRequest();
+            var form = document.getElementById('value-submit')
+            var formData = new FormData(form)
+            request.open("POST", posturl, true);
+            //append the data you want to send to the server here
+            formData.append("csrfmiddlewaretoken", csrftoken); // This works, I am not sure why the header method does not
+            formData.append("id", "takeData");
+            request.send(formData);
+
+            // This executes the function on response from server
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //console.log(this.responseText);
+                    var response = JSON.parse(this.responseText);
+                    document.getElementById("demo").innerHTML = response['content'];
+                    document.getElementById("link").innerHTML = response['download_link'];
+                    document.getElementById("measurementDownload").innerHTML = response['measurement_download_link'];
+                    document.getElementById("stateDownload").innerHTML = response['state_download_link'];
+                    document.getElementById("completeDownload").innerHTML = response['complete_download_link'];
+                    var button = document.getElementById('submitButton');
+                    button.disabled = false
+
+                }
+            };
+
+
+        });
+    });
+
+</script>
+<script>
+    function toggleId(id, $link) {
+        $node = document.getElementById(id);
+        if (!$node)
+            return;
+        if (!$node.style.display || $node.style.display == 'none') {
+            $node.style.display = 'block';
+            $link.value = '-';
+        } else {
+            $node.style.display = 'none';
+            $link.value = '+';
+        }
+    }
+    function updateParameterList() {
+        var form = document.getElementById('parameterTableData');
+        while (form.firstChild) {
+            form.removeChild(form.firstChild);
+        }
+        var parameters = document.getElementById('parameters');
+        var text = parameters.value;
+        var parameter_list = text.trim().split(/\s+/);
+        for (i = 0; i < parameter_list.length; i++) {
+            // Create an <input> element, set its type and name attributes
+            form.appendChild(document.createTextNode(parameter_list[i] + " : "));
+            var input = document.createElement("input");
+            input.type = "number";
+            input.name = parameter_list[i];
+            input.value = 1;
+            form.appendChild(input);
+            // Append a line break
+            form.appendChild(document.createElement("br"));
+        }
+    };
+    updateParameterList();
+    $('#submitParameters').click(function (e) {
+        e.preventDefault();
+        updateParameterList();
+    });
+    $('#equation').keydown(function (e) {
+        if (e.which === 13) {
+            var equation = document.getElementById('equation');
+            equationText = equation.value;
+            var variables = document.getElementById('variables').value;
+            var variablesRegex = new RegExp(variables + "(?!\\w)", 'g');
+            console.log(variablesRegex);
+
+            var newParameterList = equationText.replace(/(\W|sin|exp|cos|log|abs|\d|-|\\+)/g, " ");
+            newParameterList = newParameterList.replace(/\s+/, " ");
+            newParameterList = newParameterList.replace(variablesRegex, "");
+            newParameterArray = $.unique(newParameterList.split(/\s+/));
+            newParameterList = newParameterArray.join(" ");
+            var parameterInput = document.getElementById('parameters');
+            parameterInput.value = newParameterList.trim();
+            updateParameterList();
+        }
+    });
+
+
+
+
+</script>
+
+<script>
+
+    // run this once the document has loaded
+    $(document).ready(function () {
+        var posturl;
+        posturl = "{% url 'instrument_control' template='move' %}";
+        url = "{% static 'Test_App/img'%}";
+
+        // Ajax call for the submit button
+        $('#fitSubmit').click(function (e) {
+            e.preventDefault();
+            var button = document.getElementById('fitSubmit');
+            button.disabled = true
+            var request = new XMLHttpRequest();
+            var form = document.getElementById('fit-submit')
+            var formData = new FormData(form)
+            request.open("POST", posturl, true);
+            //append the data you want to send to the server here
+            formData.append("csrfmiddlewaretoken", csrftoken); // This works, I am not sure why the header method does not
+            formData.append("id", "fitData");
+            request.send(formData);
+
+            // This executes the function on response from server
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //console.log(this.responseText);
+                    var response = JSON.parse(this.responseText);
+                    document.getElementById("fitDisplay").innerHTML = response['fit_content'];
+                    document.getElementById("fitLink").innerHTML = response['fit_download_link'];
+                    //document.getElementById("measurementDownload").innerHTML=response['measurement_download_link'];
+                    //document.getElementById("stateDownload").innerHTML=response['state_download_link'];
+                    //document.getElementById("completeDownload").innerHTML=response['complete_download_link'];
+                    var button = document.getElementById('fitSubmit');
+                    button.disabled = false
+
+                }
+            };
+
+
+        });
+    });
+
+</script> {% endblock %}
