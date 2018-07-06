@@ -18,7 +18,7 @@ def mainLogin(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             print "LOGGED IN +++++++++++++++++++++++++++++"
-            return render(request, 'login/success.html', )
+            return redirect("/customize/")
         else:
             print "NOT VALID #############################"
     else:
@@ -40,7 +40,7 @@ def newuser(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             print "******************************"
-            return render(request, 'login/success.html', )
+            return redirect("/customize/")
     else:
         form = UserCreationForm()
     return render(request, 'login/newuser.html', {'form': form})
@@ -48,7 +48,11 @@ def newuser(request):
 
 def success(request):
     print "Logged In &&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-    return render(request, 'login/success.html')
+
+    if Preference.objects.filter(username=theUsername).exists():
+        return redirect('/home/')
+
+    return redirect("/customize/")
 
 def mainLogout(request):
     logout(request)

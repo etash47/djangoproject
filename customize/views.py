@@ -8,6 +8,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 def options(request):
     
+    print("Tryna customize!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
     if not (request.user.is_authenticated()):
         return redirect('/login/')
 

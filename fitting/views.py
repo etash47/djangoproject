@@ -27,6 +27,8 @@ import re
 
 # Create your views here.
 
+def interpolation(request):
+    return render(request, 'fitting/interpolation.html')
 
 
 def run_application(request):

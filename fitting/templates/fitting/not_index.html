@@ -25,6 +25,8 @@
 the time at which {{template}} was called {{time}} 
 {% autoescape off%}
 
+{% csrf_token %}
+
 <table>
 
    <td>
@@ -176,6 +178,7 @@ the time at which {{template}} was called {{time}}
 
        // Ajax call for the submit button
        $('#submitButton').click(function (e) {
+           print("SUBMIT PRESSED!!!!!!!!!!!!!!!!!!!!!!!!")
            e.preventDefault();
            var button = document.getElementById('submitButton');
            button.disabled = true
@@ -185,6 +188,7 @@ the time at which {{template}} was called {{time}}
            request.open("POST", posturl, true);
            //append the data you want to send to the server here
            formData.append("csrfmiddlewaretoken", csrftoken); // This works, I am not sure why the header method does not
+           formData.append("id", "fitData");
            request.send(formData);
 
            // This executes the function on response from server

@@ -37,18 +37,15 @@
 
 <link rel="stylesheet" type="text/css" href="/static/fitting/mymain.css">
 
-<link rel="stylesheet" href="/static/fitting/w3css.css"> 
+<link rel="stylesheet" href="/static/fitting/w3css.css"> {% if not user.is_authenticated %}
 
-{% if not user.is_authenticated %}
-
-<meta http-equiv="refresh" content="0; URL='/login/'" />
-
-{% endif %}
-
-{% endblock %} {% block content %}
-<div style="margin-left:15%">
+<meta http-equiv="refresh" content="0; URL='/login/'" /> {% endif %} {% endblock %} {% block content %}
+<div style="margin-left:0%">
     <div class="w3-container w3-mygreen">
-        <h1>Greetings {{user}} this is the Fitting AND ACQUISITION page </h1>
+        <h1>Instrument Control</h1>
+        <p> Logged in as: {{ user }}</p>
+        <button onclick="location.href='/login/'" type="button" style="float: right; color: black">Log Out</button>
+        <button onclick="location.href='/home/'" type="button" style="float: right; color: black">Back</button>
     </div>
     the time at which {{template}} was called {{time}}
 </div>
@@ -56,55 +53,56 @@
 <h3>Acquire Data
     <input type="button" class="toggleButton" value="+" onclick="toggleId('takeData',this)">
 </h3>
-<table id="takeData">
-
-    <td>
-        <form id="value-submit">
-            <table class=".table-bordered">
-                <tr>
-                    <td>Sample Name
-                        <input id="sampleName" type="text" name="sampleName" value="" />
+<table class="outerTable" id="takeData" style="border: 0px white;">
+    <td class="myTD" style="border: 0px white;">
+        <form id="value-submit" class="myTD">
+            <table class=".table-bordered-myTD">
+                <tr class="myTR">
+                    <td class="myTD">Sample Name <br>
+                        <input id="sampleName" type="text" name="sampleName" value="" class="myInput" />
                     </td>
                 </tr>
-                <tr>
-                    <td>Notes
-                        <textarea id="notes" type="text" name="notes" value="" form="value-submit"></textarea>
-                        <tr>
-                            <td>Bowtie:
-                                <input type="checkbox" name="bowtie" value="bowtie" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Voltage Min:
-                                <input type="number" name="vMin" value="-1" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Voltage max:
-                                <input type="number" name="vMax" value="1" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>number of points:
-                                <input type="number" name="numberPoints" value="10" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>format:
-                                <input type="text" name="format" value="r-x" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align:center">
-                                <input id="submitButton" type="submit" value="Take IV" class="btn btn-primary">
-                            </td>
-                        </tr>
+                <tr class="myTR">
+                    <td class="myTD">Notes <br>
+                        <textarea id="notes" type="text" name="notes" value="" form="value-submit" class="myInput"></textarea>
+                    </td>
+                </tr>
+                <tr class="myTR">
+                    <td class="myTD">Bowtie:
+                        <input type="checkbox" name="bowtie" value="bowtie" />
+                    </td>
+                </tr>
+                <tr class="myTR">
+                    <td class="myTD">Voltage Min <br>
+                        <input type="number" name="vMin" value="-1"  class="myInput"/>
+                    </td>
+                </tr>
+                <tr class="myTR">
+                    <td class="myTD">Voltage Max <br>
+                        <input type="number" name="vMax" value="1"  class="myInput"/>
+                    </td>
+                </tr>
+                <tr class="myTR">
+                    <td class="myTD">Number of Points <br>
+                        <input type="number" name="numberPoints" value="10" class="myInput" />
+                    </td>
+                </tr>
+                <tr class="myTR">
+                    <td class="myTD">Format <br>
+                        <input type="text" name="format" value="r-x" class="myInput" />
+                    </td>
+                </tr>
+                <tr class="myTR">
+                    <td class="myTD" style="text-align:center">
+                        <input id="submitButton" type="submit" value="Take IV" class="btn btn-primary" class="myInput">
+                    </td>
+                </tr>
             </table>
         </form>
-        </td>
-        <td>
-            <p id="demo"></p>
-        </td>
+    </td>
+    <td style="border: 0px white;">
+        <p id="demo"></p>
+    </td>
 </table>
 <p id="link"></p>
 <h3> Fit Data
@@ -336,6 +334,7 @@
 
         // Ajax call for the submit button
         $('#fitSubmit').click(function (e) {
+            console.log("AJAX CALL!!!!!!!!!!!!!!!!!!!!!!!!!!")
             e.preventDefault();
             var button = document.getElementById('fitSubmit');
             button.disabled = true

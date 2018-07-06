@@ -8,3 +8,49 @@
     align-content: center;
     text-align: center;
 }
+
+.table-bordered{
+    border: 10px solid white;
+}
+
+.outerTable{
+    border: 10px solid white;
+}
+
+tr {
+    align-content: left;
+    text-align: left;
+}
+
+td {
+    align-content: left;
+    text-align: left;
+}
+
+.myTD {
+
+    border: 2px;
+    border-color: blue;
+
+}
+
+.myTR {
+
+    border: 2px;
+    border-color: red;
+
+}
+
+.myInput {
+
+    border: 1px solid #000000;
+	border-left: 4px solid  #000000;
+
+}
+
+.myInput:focus {
+
+    border: 1px solid #00a365;
+	border-left: 4px solid  #00a365;
+
+}
