@@ -22,6 +22,7 @@ from pyMez.Code.Analysis.Reports import *
 import json
 import matplotlib.pyplot as plt
 import numpy as np
+from fitting.models import FunctionDataModel
 import re
 
 
@@ -78,6 +79,10 @@ class NotIndex(TemplateView):
         new_function=FunctionDataModel(**entry_dictionary)
         new_function.save()
 
+
+        print("SAVED IN NOT INDEX FUNCTION**********************")
+
+
         name='duh'
         context=self.get_context_data(name=name)
         # right here I am rendering the response instead of just sending an HttpResponse
@@ -127,6 +132,16 @@ class NotIndex(TemplateView):
 class FittingNext(NotIndex):
     template_name = "fitting/fitting_next.html"
 
+def equation(request, id):
+    equation = FunctionDataModel.objects.get(id=id)
+
+    context = {
+        'equation': equation
+    }
+
+    print("HULOOOOZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
+    return render(request, 'fitting/instrument_control.html', context)
+
 class KeithleyControl(TemplateView):
     """Class that allows the view of keithley data"""
     template_name = "fitting/instrument_control.html"
@@ -157,6 +172,9 @@ class KeithleyControl(TemplateView):
                                 "number_points": number_points}
             new_function = FunctionDataModel(**entry_dictionary)
             new_function.save()
+
+            print("SAVED IN KEITHLEY FUNCTION**********************")
+
 
             name = 'duh'
             context = self.get_context_data(name=name)

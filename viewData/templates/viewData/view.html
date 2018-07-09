@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/viewData/viewData.css">
+
+</head>
+
+<body>
+
+    Data:
+    <table class="tg">
+    
+        <tr>
+            <th class="tg-yw4l">ID</th>
+            <th class="tg-yw4l">Equation</th>
+            <th class="tg-yw4l">Parameters</th>
+            <th class="tg-yw4l">Variables</th>
+            <th class="tg-yw4l">X Minimum</th>
+            <th class="tg-yw4l">X Maximum</th>
+            <th class="tg-yw4l">Number of Points</th>
+        </tr>
+        {% for data in function_data %}
+            <tr>
+                <td class="tg-yw4l">{{ data.id }}</td>
+                <td class="tg-yw4l">{{ data.equation_text }}</td>
+                <td class="tg-yw4l">{{ data.parameters }}</td>
+                <td class="tg-yw4l">{{ data.variables }}</td>
+                <td class="tg-yw4l">{{ data.x_min }}</td>
+                <td class="tg-yw4l">{{ data.x_max }}</td>
+                <td class="tg-yw4l">{{ data.number_points }}</td>
+                <td class="tg-yw4l">
+                    
+                    <a href="/fitting/instrument_control/equation_id={{ data.id }}">Go to this configuration (work in progress)</a>
+
+                </td>
+            </tr>
+        {% endfor %}
+    </table>   
+</body>
+
+</html>

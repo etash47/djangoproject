@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'customize',
     'home',
     'fitting',
+    'viewData',
 ]
 
 MIDDLEWARE = [

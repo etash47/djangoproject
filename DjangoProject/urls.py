@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^$', include('login.urls')),
     url(r'^customize/', include('customize.urls')),
     url(r'^home/', include('home.urls')),
-    url(r'^fitting/', include('fitting.urls'))
+    url(r'^fitting/', include('fitting.urls')),
+    url(r'^viewData/$', include('viewData.urls'))
     #url(r'^newuser/', include('login.urls'))
 ]

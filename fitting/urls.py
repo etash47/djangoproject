@@ -6,6 +6,8 @@ operation_regex=re.compile('mean|med|all',re.IGNORECASE)
 
 urlpatterns = [
 
+    url(r'^instrument_control/equation_id=(?P<id>\d+)/$', views.equation, name='equation'),
+
     url(r'^not_index/', view = NotIndex.as_view(), name = 'not_index'),
     url(r'^fitting_next/', view = FittingNext.as_view(), name = 'fitting_next'),
     url(r'^index/', view = Index.as_view(), name = 'index'),

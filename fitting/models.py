@@ -77,6 +77,14 @@ class State(models.Model):
     def __str__(self):
         return self.state_name
 
+class AcquisitionData(models.Model):
+    sample_name=models.CharField(max_length=500)
+    notes=models.CharField(max_length=10000)
+    bowtie=models.BooleanField()
+    voltage_minimum=models.FloatField()
+    voltage_maximum=models.FloatField()
+    number_points=models.IntegerField()
+    data_format=models.CharField(max_length=200)    
 
 class FunctionDataModel(models.Model):
     "Stores the information needed to make a FunctionalModel"
