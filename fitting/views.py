@@ -22,37 +22,38 @@ from pyMez.Code.Analysis.Reports import *
 import json
 import matplotlib.pyplot as plt
 import numpy as np
-from fitting.models import FunctionDataModel
+from fitting.models import FunctionDataModel, AcquisitionData
+import traceback
 import re
 
 
 # Create your views here.
 
-def interpolation(request):
-    return render(request, 'fitting/interpolation.html')
+# def interpolation(request):
+#     return render(request, 'fitting/interpolation.html')
 
 
-def run_application(request):
-    if not (request.user.is_authenticated()):
-        return redirect('/login/')
-    return render(request, 'fitting/not_index.html')
+# def run_application(request):
+#     if not (request.user.is_authenticated()):
+#         return redirect('/login/')
+#     return render(request, 'fitting/not_index.html')
 
 
 
-def index(request):
-    print "########################################(((((((("
+# def index(request):
+#     print "########################################(((((((("
 
-    if not (request.user.is_authenticated()):
-        return redirect('/login/')  
+#     if not (request.user.is_authenticated()):
+#         return redirect('/login/')  
 
-    now=datetime.datetime.now()
-    html="<html><body><h1>The time is {0}</h1></body></html>".format(now)
-    return HttpResponse(html)
-# def create_measurement_download_link(xml_data_table):
-#     download_nodes=["ExcelFile","Csv","Ods","MatFile"]
-#     mime_types=["","text/plain","",""]
-#     table_graph=TableGraph()
-#     table_graph.set_state("Xml")
+#     now=datetime.datetime.now()
+#     html="<html><body><h1>The time is {0}</h1></body></html>".format(now)
+#     return HttpResponse(html)
+# # def create_measurement_download_link(xml_data_table):
+# #     download_nodes=["ExcelFile","Csv","Ods","MatFile"]
+# #     mime_types=["","text/plain","",""]
+# #     table_graph=TableGraph()
+# #     table_graph.set_state("Xml")
 
 class NotIndex(TemplateView):
 
@@ -81,7 +82,6 @@ class NotIndex(TemplateView):
 
 
         print("SAVED IN NOT INDEX FUNCTION**********************")
-
 
         name='duh'
         context=self.get_context_data(name=name)
@@ -132,14 +132,19 @@ class NotIndex(TemplateView):
 class FittingNext(NotIndex):
     template_name = "fitting/fitting_next.html"
 
-def equation(request, id):
-    equation = FunctionDataModel.objects.get(id=id)
+def sample(request, sample_name):
+
+    print "HULOOOOZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ" 
+    acquisition = AcquisitionData.objects.get(sample_name=sample_name)
+    fitting = FunctionDataModel.objects.get(sample_name=sample_name)
 
     context = {
-        'equation': equation
-    }
 
-    print("HULOOOOZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
+        'acquisition': acquisition,
+        'fitting': fitting,
+
+    }
+    
     return render(request, 'fitting/instrument_control.html', context)
 
 class KeithleyControl(TemplateView):
@@ -147,6 +152,10 @@ class KeithleyControl(TemplateView):
     template_name = "fitting/instrument_control.html"
 
     def post(self,request,**kwargs):
+
+        print "POSTTTTTTTTTTTTTTTTTTTTTT"
+
+        print request.POST.dict()
 
         if not (request.user.is_authenticated()):
             print "########################################((((((((0203--3"
@@ -160,6 +169,7 @@ class KeithleyControl(TemplateView):
             print("{0} is {1}".format("dir(request)", dir(request)))
             print("{0} is {1}".format("request.read()", request.read()))
 
+            sample_name = str(request.POST.get('sample_name'))
             equation = str(request.POST.get('equation'))
             variables = str(request.POST.get('variables'))
             parameters = str(request.POST.get('parameters'))
@@ -167,17 +177,9 @@ class KeithleyControl(TemplateView):
             x_max = float(request.POST.get('x_max'))
             plot_format = str(request.POST.get('format'))
             number_points = int(request.POST.get('numberPoints'))
-            entry_dictionary = {"equation_text": equation, "variables": variables,
-                                "parameters": parameters, "x_min": x_min, "x_max": x_max,
-                                "number_points": number_points}
-            new_function = FunctionDataModel(**entry_dictionary)
-            new_function.save()
-
-            print("SAVED IN KEITHLEY FUNCTION**********************")
-
 
             name = 'duh'
-            context = self.get_context_data(name=name)
+            context = self.get_context_data(name=name, id=id)
             # right here I am rendering the response instead of just sending an HttpResponse
             try:
                 last_data = Measurement.objects.last()
@@ -190,13 +192,19 @@ class KeithleyControl(TemplateView):
                 # data=DataSimulator(model=f,output_noise_type='normal',output_noise_center=0,output_noise_width=20)
                 # data.set_x(x_min,x_max,number_points)
                 # f.clear_parameters
+                plt.close()
                 figure = plt.figure()
                 x_data = np.linspace(x_min, x_max, number_points)
                 # y_data=[2*x**2+3 for x in x_data]
-                plt.plot(xml_data.to_list("Voltage"),xml_data.to_list("Current"),label=last_data.measurement_name)
-                plt.plot(x_data, f(x_data), plot_format, label="Initial Guess ${0}$".format(f.to_latex()))
+                
+                plt.plot(np.array(map(lambda x:float(x),xml_data.to_list("Voltage"))),
+                            np.array(map(lambda x:float(x),xml_data.to_list("Current"))),label=last_data.measurement_name)
+                print "VOLTAGE.........."
+                print xml_data.to_list("Voltage")
+                plt.plot(x_data, f(x_data), "r-", label="Initial Guess ${0}$".format(f.to_latex()))
                 f.fit_data(np.array(map(lambda x:float(x),xml_data.to_list("Voltage"))),
                            np.array(map(lambda x:float(x),xml_data.to_list("Current"))))
+                ###print f.parameter_values
                 plt.plot(x_data, f(x_data), plot_format, label="Fit ${0}$".format(f.to_latex()))
                 plt.title("${0}$".format(f.to_latex()))
                 plt.legend()
@@ -343,11 +351,87 @@ class KeithleyControl(TemplateView):
 
             # excel and text formats
             output_dictionary["measurement_download_link"]=download_measurement+" || table downloads -> " + extra_links
+        
+        elif form_id == 'saveData':
+
+            print("Attempting to save the DATA!!!")
+
+            sample_name = str(request.POST.get('sample_name'))
+            equation = str(request.POST.get('equation'))
+            variables = str(request.POST.get('variables'))
+            parameters = str(request.POST.get('parameters'))
+            x_min = float(request.POST.get('x_min'))
+            x_max = float(request.POST.get('x_max'))
+            number_points = int(request.POST.get('numberPoints'))
+            entry_dictionary = {
+                "equation_text": equation, 
+                "variables": variables,
+                "parameters": parameters, 
+                "x_min": x_min, 
+                "x_max": x_max,
+                "number_points": number_points,
+                "sample_name": sample_name,
+            }
+
+            new_function = None
+
+            try:
+                new_function = FunctionDataModel.objects.get(sample_name=sample_name)
+                new_function.__dict__.update(entry_dictionary)
+                new_function.save()
+                print("Save Successful")
+            except FunctionDataModel.DoesNotExist:
+                try:
+                    new_function = FunctionDataModel(**entry_dictionary)
+                    new_function.save()
+                    print("Save Successful")
+                except:
+                    print("There was an error on line 382 ")
+                    traceback.print_exc()
+            except:
+                print("There was an error on line 384")
+                traceback.print_exc()
 
 
+            v_min=float(request.POST.get('vMin'))
+            v_max=float(request.POST.get('vMax'))
+            number_points=int(request.POST.get('numberPoints'))
+            bowtie=bool(request.POST.get('bowtie'))
+            notes=str(request.POST.get('notes'))
+            plot_format = str(request.POST.get('format'))
+
+            entry_dictionary = {
+                "sample_name": sample_name, 
+                "notes": notes,
+                "bowtie": bowtie, 
+                "v_min": v_min, 
+                "v_max": v_max,
+                "number_points": number_points,
+                "plot_format": plot_format
+            }
+
+            try:
+                new_acquisition = AcquisitionData.objects.get(sample_name=sample_name)
+                new_acquisition.__dict__.update(entry_dictionary)
+                new_acquisition.save()
+                print("Save Successful")
+            except AcquisitionData.DoesNotExist:
+                try:
+                    new_acquisition = AcquisitionData(**entry_dictionary)
+                    new_acquisition.save()
+                    print("Save Successful")
+                except:
+                    print("There was an error 414")
+                    traceback.print_exc()
+            except:
+                print("There was an error 416")
+                traceback.print_exc()
+            
         return HttpResponse(json.dumps(output_dictionary))
 
     def get_context_data(self, **kwargs):
+
+        print("CONTEXTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
 
         # Call the base implementation first to get a context
         context = super(KeithleyControl, self).get_context_data(**kwargs)
@@ -355,6 +439,21 @@ class KeithleyControl(TemplateView):
         context['content']=""
         context['time']=datetime.datetime.utcnow()
         context['download_link']="Nothing to dowload yet"
+
+        acquisition = AcquisitionData.objects.get(sample_name="default_name")
+        fitting = FunctionDataModel.objects.get(sample_name="default_name")
+
+        try:
+            if kwargs['sample_name'] is None:
+                print "USING DEFAULT ID******************************"
+            else:
+                acquisition = AcquisitionData.objects.get(sample_name=str(kwargs['sample_name']))
+                fitting = FunctionDataModel.objects.get(sample_name=str(kwargs['sample_name']))
+        except:
+            pass
+
+        context['acquisition'] = acquisition
+        context['fitting'] = fitting
         return context
 
 class Index(TemplateView):

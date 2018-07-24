@@ -77,17 +77,22 @@ class State(models.Model):
     def __str__(self):
         return self.state_name
 
+# class InstrumentControlGeneral(model.Model):
+#     notes=models.CharField(max_length=10000)
+#     name=models.CharField(max_length=)
+
 class AcquisitionData(models.Model):
-    sample_name=models.CharField(max_length=500)
+    sample_name=models.CharField(primary_key=True,max_length=200)
     notes=models.CharField(max_length=10000)
     bowtie=models.BooleanField()
-    voltage_minimum=models.FloatField()
-    voltage_maximum=models.FloatField()
+    v_min=models.FloatField()
+    v_max=models.FloatField()
     number_points=models.IntegerField()
-    data_format=models.CharField(max_length=200)    
+    plot_format=models.CharField(max_length=200)    
 
 class FunctionDataModel(models.Model):
     "Stores the information needed to make a FunctionalModel"
+    sample_name=models.CharField(primary_key=True,max_length=200)
     equation_text=models.CharField(max_length=500)
     parameters=models.CharField(max_length=500)
     variables=models.CharField(max_length=200)
@@ -106,7 +111,6 @@ class Entity(models.Model):
     time_added=models.DateTimeField(verbose_name="Time File Added",name="time_added",auto_now_add=True)
     def __str__(self):
         return self.file.name
-
 
 class FloatValue(models.Model):
     value=models.FloatField(null=True)

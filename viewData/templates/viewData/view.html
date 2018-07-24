@@ -13,35 +13,99 @@
 
 <body>
 
-    Data:
-    <table class="tg">
-    
-        <tr>
-            <th class="tg-yw4l">ID</th>
-            <th class="tg-yw4l">Equation</th>
-            <th class="tg-yw4l">Parameters</th>
-            <th class="tg-yw4l">Variables</th>
-            <th class="tg-yw4l">X Minimum</th>
-            <th class="tg-yw4l">X Maximum</th>
-            <th class="tg-yw4l">Number of Points</th>
-        </tr>
-        {% for data in function_data %}
-            <tr>
-                <td class="tg-yw4l">{{ data.id }}</td>
-                <td class="tg-yw4l">{{ data.equation_text }}</td>
-                <td class="tg-yw4l">{{ data.parameters }}</td>
-                <td class="tg-yw4l">{{ data.variables }}</td>
-                <td class="tg-yw4l">{{ data.x_min }}</td>
-                <td class="tg-yw4l">{{ data.x_max }}</td>
-                <td class="tg-yw4l">{{ data.number_points }}</td>
-                <td class="tg-yw4l">
-                    
-                    <a href="/fitting/instrument_control/equation_id={{ data.id }}">Go to this configuration (work in progress)</a>
 
-                </td>
-            </tr>
-        {% endfor %}
-    </table>   
+    <div class="topbar">
+
+        <a href="/home/">
+            <img src="/static/viewData/nist.png" width=125px height=auto style="margin: 50px">
+        </a>
+        <button onclick="location.href='/login/'" type="button" style="float: right; " class="btn">Log Out</button>
+        <button onclick="location.href='/home/'" type="button" style="float: right;" class="btn">Back</button>
+
+        <h1 class="headerONE">My Data</h1>
+        <h3 class="headerTHREE">Logged in as {{user}}</h3>
+
+    </div>
+
+
+    <div style="width: 100%; text-align: center; margin-top: 50px; margin-bottom: 0px;">
+        <div class="boxheader" style="width:1000px;">
+            Acquisition Parameters
+        </div>
+        <div class="dataBox">
+
+            <table class="tg">
+
+                <tr>
+                    <th class="tg-yw4l">Sample Name</th>
+                    <th class="tg-yw4l">Notes</th>
+                    <th class="tg-yw4l">Bowtie</th>
+                    <th class="tg-yw4l">Voltage Minimum</th>
+                    <th class="tg-yw4l">Voltage Maximum</th>
+                    <th class="tg-yw4l">Number of Points</th>
+                    <th class="tg-yw4l">Plot Format</th>
+                </tr>
+                {% for data in acquisition_data %}
+                <tr>
+                    <td class="tg-yw4l">
+                        <a href="/fitting/history/{{data.sample_name}}">{{ data.sample_name }}</a>
+                    </td>
+                    <td class="tg-yw4l">{{ data.notes }}</td>
+                    <td class="tg-yw4l">{{ data.bowtie }}</td>
+                    <td class="tg-yw4l">{{ data.v_min }}</td>
+                    <td class="tg-yw4l">{{ data.v_max }}</td>
+                    <td class="tg-yw4l">{{ data.number_points }}</td>
+                    <td class="tg-yw4l">{{ data.plot_format }}</td>
+
+                </tr>
+                {% endfor %}
+            </table>
+
+
+
+        </div>
+    </div>
+
+    <div style="width: 100%; text-align: center; margin-top: 0px; margin-bottom: 0px;">
+        <div class="boxheader" style="width:1000px;">
+            Fitting Data
+        </div>
+        <div class="dataBox">
+
+            <table class="tg">
+
+                <tr>
+                    <th class="tg-yw4l">Sample Name</th>
+                    <th class="tg-yw4l">Equation</th>
+                    <th class="tg-yw4l">Parameters</th>
+                    <th class="tg-yw4l">Variables</th>
+                    <th class="tg-yw4l">X Minimum</th>
+                    <th class="tg-yw4l">X Maximum</th>
+                    <th class="tg-yw4l">Number of Points</th>
+                </tr>
+                {% for data in function_data %}
+                <tr>
+                    <td class="tg-yw4l">
+                        <a href="/fitting/history/{{data.sample_name}}">{{ data.sample_name }}</a>
+                    </td>
+                    <td class="tg-yw4l">{{ data.equation_text }}</td>
+                    <td class="tg-yw4l">{{ data.parameters }}</td>
+                    <td class="tg-yw4l">{{ data.variables }}</td>
+                    <td class="tg-yw4l">{{ data.x_min }}</td>
+                    <td class="tg-yw4l">{{ data.x_max }}</td>
+                    <td class="tg-yw4l">{{ data.number_points }}</td>
+
+                </tr>
+                {% endfor %}
+            </table>
+
+
+
+        </div>
+    </div>
+
+
+
 </body>
 
 </html>

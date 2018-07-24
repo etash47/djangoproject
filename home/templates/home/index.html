@@ -9,42 +9,64 @@
 
     <link rel="stylesheet" type="text/css" href="/static/home/mymain.css">
 
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="/static/home/mymain.css">
+
 
     <link rel="stylesheet" href="/static/home/w3css.css">
 
+
+
+
 </head>
 
+
+
+
 <body>
+    <div>
 
 
-    <!-- Sidebar -->
-    <div class="w3-sidebar w3-light-grey w3-bar-block" style="width:15%">
-        <h3 class="w3-bar-item">Applications</h3>
+
+        <!-- Page Content -->
+        <div class="topbar">
+
+            <img src="/static/home/nist.png" width=125px height=auto style="margin: 50px">
+
+            <button onclick="location.href='/login/'" type="button" style="float: right; " class="btn">Log Out</button>
+            <button onclick="location.href='/viewData/'" type="button" style="float: right; " class="btn">View Your Data</button>
+            <button onclick="location.href='/customize/'" type="button" style="float: right;" class="btn">Preferences</button>
+
+            <h1 class="headerONE">CALNET BETA</h1>
+            <h2 class="headerTWO"> National Institute of Standards and Technology</h2>
+            <h3 class="headerTHREE">Welcome back {{user}}</h3>
+
+
+
+
+        </div>
+
+        <h4 class="headerFOUR">Applications</h4>
+        <hr style="width:6%; height:4px; background-color: #131313; display:inline-block; text-align:center; margin-left: 47%; margin-right: 47% ">
+
         <!--<a href="/fitting/not_index" class="w3-bar-item w3-button" font="Poppins-Regular">Fitting</a>-->
-        <a href="/fitting/instrument_control" class="w3-bar-item w3-button">Instrument Control</a>
-        <a href="#" class="w3-bar-item w3-button">Link 3</a>
-    </div>
+        <div style="text-align: center;">
+            <a href="/fitting/instrument_control/default_name" class="btn2">
 
-    <!-- Page Content -->
-    <div style="margin-left:15%">
+                <img src="/static/home/icontrol.png" width=140px height=auto style="display:block; text-align: center; margin: 35px; margin-bottom: 15px;">
 
-        <div class="w3-container w3-mygreen">
-            <h1>Welcome back {{user}}!</h1>
+                <h5 class="headerFIVE" style="clear:left;">Instrument Control</h5>
 
-            <button onclick="location.href='/viewData/'" type="button" style="float: right; color: black">View Your Data</button>
-            <button onclick="location.href='/customize/'" type="button" style="float: right; color: black">Preferences</button>
+            </a>
+
+            <a href="/fitting/instrument_control/equation_id=0" class="btn2">
+
+                <img src="/static/home/icontrol.png" width=140px height=auto style="display:block; text-align: center; margin: 35px; margin-bottom: 15px;">
+
+                <h5 class="headerFIVE" style="clear:left;">Instrument Control</h5>
+
+            </a>
+
         </div>
-
-        <div class="w3-container">
-            <h2>Hello</h2>
-            <p>Hello Hello</p>
-        </div>
-
     </div>
-
-
 </body>
 
 </html>
