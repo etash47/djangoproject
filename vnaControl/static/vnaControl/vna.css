@@ -1,31 +1,31 @@
 @font-face {
     font-family: Poppins-Regular;
-    src: url('/static/fitting/poppins/Poppins-Regular.ttf');
+    src: url('/static/vnaControl/poppins/Poppins-Regular.ttf');
 }
 
 @font-face {
     font-family: Poppins-Medium;
-    src: url('/static/fitting/poppins/Poppins-Medium.ttf');
+    src: url('/static/vnaControl/poppins/Poppins-Medium.ttf');
 }
 
 @font-face {
     font-family: Poppins-MediumItalic;
-    src: url('/static/fitting/poppins/Poppins-MediumItalic.ttf');
+    src: url('/static/vnaControl/poppins/Poppins-MediumItalic.ttf');
 }
 
 @font-face {
     font-family: Poppins-Bold;
-    src: url('/static/fitting/poppins/Poppins-Bold.ttf');
+    src: url('/static/vnaControl/poppins/Poppins-Bold.ttf');
 }
 
 @font-face {
     font-family: Poppins-SemiBold;
-    src: url('/static/fitting/poppins/Poppins-SemiBold.ttf');
+    src: url('/static/vnaControl/poppins/Poppins-SemiBold.ttf');
 }
 
 @font-face {
     font-family: Poppins-SemiBoldItalic;
-    src: url('/static/fitting/poppins/Poppins-SemiBoldItalic.ttf');
+    src: url('/static/vnaControl/poppins/Poppins-SemiBoldItalic.ttf');
 }
 
 .headerONE {
@@ -177,7 +177,7 @@ body {
 
 .topbar {
     padding: 0%;
-    background: linear-gradient( #6363639c, #6363639c), url("/static/home/silhoutte.jpg");
+    background: linear-gradient( #6363639c, #6363639c), url("/static/vnaControl/silhoutte.jpg");
     background-size: cover;
     /* background: -webkit-linear-gradient(top, #676470, #ffffffea);
     background: -o-linear-gradient(top, #676470, #676470ea);
@@ -422,6 +422,6 @@ table, tr, td {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5) url('/static/fitting/loader.gif') center center no-repeat;
+    background: rgba(0, 0, 0, 0.5) url('/static/vnaControl/loader.gif') center center no-repeat;
     background-size: 200px 200px;
 }

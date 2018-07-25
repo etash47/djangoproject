@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'home',
     'fitting',
     'viewData',
+    'vnaControl',
 ]
 
 MIDDLEWARE = [

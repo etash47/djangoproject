@@ -7,7 +7,6 @@
 <style>
 </style>
 <!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href="/static/home/mymain.css">
 
 <link rel="stylesheet" type="text/css" href="/static/fitting/mymain.css">
 
@@ -15,7 +14,7 @@
 
 <meta http-equiv="refresh" content="0; URL='/login/'" /> {% endif %} {% endblock %} {% block content %}
 
-
+<div class="loaderOverlay", id="loader"></div>
 
 <div class="topbar">
 
@@ -268,12 +267,14 @@
 
         toggleId('generalInfo', this);
         toggleId('downloadData', this);
+        document.getElementById("loader").style.display = 'none';
 
         // Ajax call for the submit button
         $('#submitButton').click(function (e) {
             e.preventDefault();
             var button = document.getElementById('submitButton');
             button.disabled = true
+            document.getElementById("loader").style.display = 'block';
             var request = new XMLHttpRequest();
             var form = document.getElementById('value-submit')
             var formData = new FormData(form)
@@ -295,6 +296,7 @@
                     document.getElementById("completeDownload").innerHTML = response['complete_download_link'];
                     var button = document.getElementById('submitButton');
                     button.disabled = false
+                    document.getElementById("loader").style.display = 'none';
 
                 }
             };
@@ -380,6 +382,7 @@
             e.preventDefault();
             var button = document.getElementById('fitSubmit');
             button.disabled = true
+            document.getElementById("loader").style.display = 'block';
             var request = new XMLHttpRequest();
             var form = document.getElementById('fit-submit')
             var formData = new FormData(form)
@@ -401,6 +404,7 @@
                     //document.getElementById("completeDownload").innerHTML=response['complete_download_link'];
                     var button = document.getElementById('fitSubmit');
                     button.disabled = false
+                    document.getElementById("loader").style.display = 'none';
 
                 }
             };
