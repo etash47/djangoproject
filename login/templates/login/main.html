@@ -39,7 +39,7 @@
 	<div class="limiter"> <!--limiter is a bootstrap class-->
 		<div class="container-login100" style="background-image: url('/static/login/images/icons/flatiron.jpg');"> <!--bootstrap class-->
 			<div class="wrap-login100"><!--bootstrap class-->
-				<form class="login100-form validate-form" method="post"> <!--POST method must be in form for the Authenticate Function to work (see login/views.py)-->
+				<form class="login100-form validate-form" method="post" autocomplete="on"> <!--POST method must be in form for the Authenticate Function to work (see login/views.py)-->
 					<span class="login100-form-logo">
 						<img src="/static/login/images/icons/NIST_LOGO.png" width="90" height:auto>
 					</span>
@@ -62,7 +62,7 @@
 						character field's deafault CSS (which is ugly)
 					-->
 					<div class="wrap-input100 validate-input" data-validate="Enter username">
-						<input id="username" class="input100" type="text" name="username" placeholder="Username"> 
+						<input id="username" class="input100" type="text" name="username" placeholder="Username" autocomplete="username"> 
 						<span class="focus-input100" data-placeholder="&#xf207;">
 						</span>
 				
@@ -80,7 +80,7 @@
 	
 					<!--repeated from above except with "password"-->
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input id="password" class="input100" type="password" name="password" placeholder="Password">
+						<input id="password" class="input100" type="password" name="password" placeholder="Password" autocomplete="new-password">
 						<span class="focus-input100" data-placeholder="&#xf191;">
 							
 						</span>

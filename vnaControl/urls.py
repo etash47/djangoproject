@@ -9,5 +9,6 @@ urlpatterns = [
     # url(r'^instrument_control/(?P<sample_names>\w+)/$', view = KeithleyControl.as_view(), name = 'instrument_control'),
     # url(r'^instrument_control/(?P<template>[\w|-]+)/$',view=KeithleyControl.as_view(),name='instrument_control'),
 
-    url(r'^$', views.default, name='default')
+    url(r'^', view = VNAControl.as_view(), name='vnaControl'),
+    #url(r'^(?P<template>[\w|-]+)/$',view=VNAControl.as_view(),name='vnaControl'),
 ]

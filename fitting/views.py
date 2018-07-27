@@ -350,7 +350,8 @@ class KeithleyControl(TemplateView):
             extra_links=TableGraph_to_Links(table_graph,base_name=measurement_data.path,**link_options)
 
             # excel and text formats
-            output_dictionary["measurement_download_link"]=download_measurement+" || table downloads -> " + extra_links
+            #output_dictionary["measurement_download_link"]=download_measurement+" || table downloads -> " + extra_links
+            output_dictionary["measurement_download_link"]=" || table downloads -> " + extra_links
         
         elif form_id == 'saveData':
 

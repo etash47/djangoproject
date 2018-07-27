@@ -1,11 +1,10 @@
 {% extends 'index.html' %} {% load staticfiles %} {% block metahead %}
 <meta charset="UTF-8"> {% endblock %} {% block title %} {{user}}:{{template }} {% endblock %} {% block pagehead %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-    crossorigin="anonymous">
 
-<link rel="stylesheet" type="text/css" href="/static/vnaControl/vna.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous"> -->
 
-{% endblock %} {% block content %}
+<link rel="stylesheet" type="text/css" href="/static/vnaControl/vna.css"> {% endblock %} {% block content %}
 <!--Begin by Introducing the user to the purpose of the web app-->
 
 <div class="topbar">
@@ -22,118 +21,174 @@
 
 </div>
 
+<div style="width: 100%; text-align: center; margin-top:50px;">
+    <div style="display: inline-block; vertical-align: top;">
 
-<h1>Greetings {{user}} this is the vna data acquistion page </h1>
-{% autoescape off%}
-<h3>VNA Setup</h3>
+        <button type="button" class="boxheader" value="+" onclick="toggleId('VNASetup',this)" style="width:500px;">
+            VNA Setup
+        </button>
 
-<div id="VNASetupDiv">
-    <!-- Beging with a selector that determines if the user wants to setup the vna or use the current
-    instrument settings-->
-    <label for="UserSetUp">Use the current instrument state</label>
-    <input type="radio" name="UserSetUp" id="CurrentSetUp" value="False" onclick="hideOnCheck('CurrentSetUp','VNASetupForm')"
-        checked/>
-    <label for="UserSetUp">Setup The VNA</label>
-    <input type="radio" name="UserSetUp" id="UserSetup" value="True" onclick="showOnCheck('UserSetup','VNASetupForm')" />
-    <br/>
-    <!-- If the user selects Setup The VNA then give some basic choices -->
-    <form id="VNASetupForm" style="display:none;">
+        <div class="informationbox" id="VNASetup">
+            <div style="text-align: left; padding: 25px; padding-top: 5px;">
 
-        <label for="IFBW">IFBW</label>
-        <input type="number" name="IFBW" value="10" id="IFBW" />
+                <label for="UserSetUp">Use the current instrument state</label>
+                <input type="radio" name="UserSetUp" id="CurrentSetUp" value="False" onclick="hideOnCheck('CurrentSetUp','VNASetupForm')"
+                    checked/>
+                <label for="UserSetUp">Setup The VNA</label>
+                <input type="radio" name="UserSetUp" id="UserSetup" value="True" onclick="showOnCheck('UserSetup','VNASetupForm')" />
+                <br/>
+                <!-- If the user selects Setup The VNA then give some basic choices -->
+                <form id="VNASetupForm" style="display:none;">
 
-        <br/>
-        <label for="CorrectionOn">Correction</label>
-        <input type="checkbox" id="CorrectionOn" onclick="showOnCheck('CorrectionOn','CorrectionText')">
-        <p id="CorrectionText" style="display:none;color:red;">Correction is On</p>
-        <br/>
+                    <label for="IFBW">IFBW</label>
+                    <input type="number" name="IFBW" value="10" id="IFBW" />
 
-    </form>
-    <hr/>
-    <h3>Parameter Selection</h3>
-    <form id="ParameterSelectionForm" style="">
-        <select>
-            <option type="radio" name="ParameterSelection" id="s1p">One Port Scattering Parameters (s1p)</option>
-            <option name="ParameterSelection" id="s2p">Two Port Scattering Parameters (s2p)</option>
-            <option name="ParameterSelection" id="w1p">One Port Wave Parameters (w1p)</option>
-            <option name="ParameterSelection" id="w2p">Two Port Wave Parameters (w2p)</option>
-        </select>
-        <!--Put port selection select here-->
-    </form>
-    <hr/>
-    <h3>Acquistion Metadata
-        <input type="button" class="toggleButton" value="+" onclick="toggleId('MetaData',this)">
-    </h3>
-    <form id="MetaData">
-        <label for="ConnectorType">Connector Type </label>
-        <select id="ConnectorType">
-            <option value="TypeN">Type N</option>
-            <option value="3.5mm">3.5 mm</option>
-            <option value="2.4mm">2.4 mm</option>
-            <option value="2.92mm">2.92 mm</option>
-            <option value="1.85mm">1.85 mm</option>
-            <option value="1mm">1 mm</option>
-            <option value="OnWafer">On Wafer</option>
-        </select>
-    </form>
+                    <br/>
+                    <label for="CorrectionOn">Correction</label>
+                    <input type="checkbox" id="CorrectionOn" onclick="showOnCheck('CorrectionOn','CorrectionText')">
+                    <p id="CorrectionText" style="display:none;color:red;">Correction is On</p>
+                    <br/>
+                    <div style="text-align: center">
+                        <input id="setupVNA" type="button" value="Setup" class="buttonA">
+                </div>
 
-    <h3>Acquire Data
-        <input id="submitButton" type="submit" value="Take Data" class="btn btn-primary">
-    </h3>
-    <script>
+                </form>
+                <hr/>
+            </div>
+        </div>
+    </div>
 
-        function showOnCheck(checkBoxId, itemToShowId) {
-            // Get the checkbox
-            var checkBox = document.getElementById(checkBoxId);
-            // Get the output text
-            var setup = document.getElementById(itemToShowId);
+    <div style="display: inline-block; vertical-align: top;">
 
-            // If the checkbox is checked, display the output text
-            if (checkBox.checked == true) {
-                setup.style.display = "block";
-            } else {
-                setup.style.display = "none";
-            }
-        }
+        <button type="button" class="boxheader" value="+" onclick="toggleId('ParametersConnector',this)" style="width:500px;">
+            Parameter Selection
+        </button>
 
-        function hideOnCheck(checkBoxId, itemToShowId) {
-            // Get the checkbox
-            var checkBox = document.getElementById(checkBoxId);
-            // Get the output text
-            var setup = document.getElementById(itemToShowId);
+        <div class="informationbox" id="ParametersConnector">
+            <div style="text-align: left; padding: 25px; padding-top: 5px;">
+                <form id="ParameterSelectionForm" style="">
+                    <select>
+                        <option type="radio" name="ParameterSelection" id="s1p">One Port Scattering Parameters (s1p)</option>
+                        <option name="ParameterSelection" id="s2p">Two Port Scattering Parameters (s2p)</option>
+                        <option name="ParameterSelection" id="w1p">One Port Wave Parameters (w1p)</option>
+                        <option name="ParameterSelection" id="w2p">Two Port Wave Parameters (w2p)</option>
+                    </select>
+                    <!--Put port selection select here-->
+                </form>
 
-            // If the checkbox is checked, display the output text
-            if (checkBox.checked == true) {
-                setup.style.display = "none";
-            } else {
-                setup.style.display = "none";
-            }
-        }
+                <form id="MetaData">
+                    <label for="ConnectorType">Connector Type </label>
+                    <select id="ConnectorType">
+                        <option value="TypeN">Type N</option>
+                        <option value="3.5mm">3.5 mm</option>
+                        <option value="2.4mm">2.4 mm</option>
+                        <option value="2.92mm">2.92 mm</option>
+                        <option value="1.85mm">1.85 mm</option>
+                        <option value="1mm">1 mm</option>
+                        <option value="OnWafer">On Wafer</option>
+                    </select>
+                </form>
+            </div>
+        </div>
 
-    </script>
+    </div>
+
+
+    <div style="display: inline-block; vertical-align: top;">
+
+        <button type="button" class="boxheader" value="+" onclick="toggleId('Freq',this)" style="width:500px;">
+            Frequency
+        </button>
+
+        <div class="informationbox" id="Freq">
+            <div style="text-align: left; padding: 25px; padding-top: 5px;">
+
+            </div>
+        </div>
+    </div>
+
+    <div style="display: inline-block; vertical-align: top;">
+
+        <button type="button" class="boxheader" value="+" onclick="toggleId('Acq',this)" style="width:500px;">
+            Acquire Data
+        </button>
+
+        <div class="informationbox" id="Acq">
+
+            <input id="submitButton" type="submit" value="Take Data" class="buttonA">
+
+        </div>
+    </div>
+
 
 </div>
 
 
 
-<h3>Download Data
-    <input type="button" class="toggleButton" value="+" onclick="toggleId('downloadData',this)">
-</h3>
-<table id="downloadData">
-    <tr>
-        <td class="heading">Measurement:</td>
-        <td id="measurementDownload"></td>
-    </tr>
-    <tr>
-        <td class="heading">State:</td>
-        <td id="stateDownload"></td>
-    </tr>
-    <tr>
-        <td class="heading">Complete Measurement:</td>
-        <td id="completeDownload"></td>
-    </tr>
-</table>
-{{download_link}} {% endautoescape %} {% endblock %} {% block bodyscripts %}
+
+{% autoescape off%}
+
+
+<div style="width: 100%; text-align: center; margin-top:50px;">
+    <button type="button" class="boxheader" value="+" onclick="toggleId('downloadSection',this)" style="width:500px;">
+        Acquire Data
+    </button>
+
+    <div class="informationbox" id="downloadSection">
+        <div style="text-align: left; padding: 25px; padding-top: 5px;">
+            <table id="downloadData" style="display: block;">
+                <tr>
+                    <td class="heading">Measurement:</td>
+                    <td id="measurementDownload"></td>
+                </tr>
+                <tr>
+                    <td class="heading">State:</td>
+                    <td id="stateDownload"></td>
+                </tr>
+                <tr>
+                    <td class="heading">Complete Measurement:</td>
+                    <td id="completeDownload"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script>
+
+    function showOnCheck(checkBoxId, itemToShowId) {
+        // Get the checkbox
+        var checkBox = document.getElementById(checkBoxId);
+        // Get the output text
+        var setup = document.getElementById(itemToShowId);
+
+        // If the checkbox is checked, display the output text
+        if (checkBox.checked == true) {
+            setup.style.display = "block";
+        } else {
+            setup.style.display = "none";
+        }
+    }
+
+    function hideOnCheck(checkBoxId, itemToShowId) {
+        // Get the checkbox
+        var checkBox = document.getElementById(checkBoxId);
+        // Get the output text
+        var setup = document.getElementById(itemToShowId);
+
+        // If the checkbox is checked, display the output text
+        if (checkBox.checked == true) {
+            setup.style.display = "none";
+        } else {
+            setup.style.display = "none";
+        }
+    }
+
+</script> {{download_link}} {% endautoescape %} {% endblock %} {% block bodyscripts %}
 <script>
 
     $('#submitParameters').click(function (e) {
@@ -172,8 +227,12 @@
     // run this once the document has loaded
     $(document).ready(function () {
         var posturl;
-        posturl = "{% url 'instrument_control' template='move' %}";
+        posturl = "{% url 'vnaControl' %}";
         url = "{% static 'Test_App/img'%}";
+
+        toggleId("VNASetup", self)
+        toggleId("ParametersConnector", self)
+        toggleId("Freq", self)
 
         // Ajax call for the submit button
         $('#submitButton').click(function (e) {
@@ -204,9 +263,23 @@
 
                 }
             };
+        });
 
+        $('#setupVNA').click(function (e) {
+            var posturl;
+            posturl = "{% url 'vnaControl' %}";
+            e.preventDefault();
+
+            var request = new XMLHttpRequest();
+            request.open("POST", posturl, true);
+            console.log(posturl);
+            var formData = new FormData();
+            formData.append("csrfmiddlewaretoken", csrftoken);
+            formData.append("id", "setupVNA");
+            request.send(formData);
 
         });
+
     });
 
 </script>
