@@ -287,15 +287,22 @@
             request.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     //console.log(this.responseText);
+                    var button = document.getElementById('submitButton');
+                    button.disabled = false
+                    document.getElementById("loader").style.display = 'none';
+
                     var response = JSON.parse(this.responseText);
+
+
+                    alert(response["errors"])
+
                     document.getElementById("demo").innerHTML = response['content'];
                     document.getElementById("link").innerHTML = response['download_link'];
                     document.getElementById("measurementDownload").innerHTML = response['measurement_download_link'];
                     document.getElementById("stateDownload").innerHTML = response['state_download_link'];
                     document.getElementById("completeDownload").innerHTML = response['complete_download_link'];
-                    var button = document.getElementById('submitButton');
-                    button.disabled = false
-                    document.getElementById("loader").style.display = 'none';
+                    alert("You measured a " + response["detected_device"])
+                    
 
                 }
             };

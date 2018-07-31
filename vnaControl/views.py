@@ -48,13 +48,19 @@ class VNAControl(TemplateView):
         form_id = str(request.POST.get('id'))
         output_dictionary = {}
 
-        whos_there()
+        print whos_there()
 
+        print("Creating VNA....")
         vna = VNA("GPIB::16")
+        print("....Created VNA")
 
         if form_id == 'setupVNA':
+            print "Setting Up VNA"
             ifbw_value = int(request.POST.get('ifbw_value'))
             vna.set_IFBW(self, ifbw_value)
+            print vna
+            print "vna information"
+            output_dictionary["vna"] = vna
 
         return HttpResponse(json.dumps(output_dictionary))
 
@@ -81,8 +87,7 @@ class VNAControl(TemplateView):
         if gpib_resources:
             for instrument_name,idn in gpib_idn_dictionary.iteritems():
                 print("{0} is at address {1}".format(idn,instrument_name))
-            print gpid_idn_dictionary
-            return gpib_idn_dictionary
+            return gpib_idn_dictionary.iteritems()
         else:
             print("There are no GPIB resources available")
             return None

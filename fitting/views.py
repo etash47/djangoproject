@@ -25,6 +25,7 @@ import numpy as np
 from fitting.models import FunctionDataModel, AcquisitionData
 import traceback
 import re
+import pickle
 
 
 # Create your views here.
@@ -352,6 +353,27 @@ class KeithleyControl(TemplateView):
             # excel and text formats
             #output_dictionary["measurement_download_link"]=download_measurement+" || table downloads -> " + extra_links
             output_dictionary["measurement_download_link"]=" || table downloads -> " + extra_links
+
+            
+            #####Use Classifier to detect device
+            try:
+                pickleFile = open("fitting/MachineLearning.pickle", "rb")
+                classifier = pickle.load(pickleFile)
+                xml = measurement_data
+                test_file = XmlDataTable_to_AsciiDataTable(xml)
+                print test_file
+                test_array = [np.array(test_file[str("Current")], dtype = float)]
+
+                predictions=classifier.predict(test_array)
+                device_type_dictionary={0:"3.3KOhms",1:"3.6KOhms",2:"3.9KOhms",3:"100KOhms",4:"200KOhms",5:"ZenerDiode",6:"GreenLED"}
+                devices=[device_type_dictionary[key] for key in predictions.tolist()]
+                
+                output_dictionary["detected_device"] = devices
+                output_dictionary["errors"] = "Successful"
+            except Exception as e:
+                output_dictionary["errors"] = str(e)
+
+            
         
         elif form_id == 'saveData':
 

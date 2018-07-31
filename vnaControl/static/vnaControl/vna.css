@@ -425,3 +425,24 @@ table, tr, td {
     background: rgba(0, 0, 0, 0.5) url('/static/vnaControl/loader.gif') center center no-repeat;
     background-size: 200px 200px;
 }
+
+
+label.radio {
+    cursor: pointer;
+}
+label.radio input {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+}
+label.radio span {
+    padding: 7px 7px;
+    border: 2px solid #EEE;
+    display: inline-block;
+    color: rgba(46, 63, 141, 0.87);
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+label.radio input:checked + span {
+    border-color: rgba(46, 63, 141, 0.87);
+}
