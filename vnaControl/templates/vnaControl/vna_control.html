@@ -1,11 +1,13 @@
 {% extends 'index.html' %} {% load staticfiles %} {% block metahead %}
 <meta charset="UTF-8"> {% endblock %} {% block title %} {{user}}:{{template }} {% endblock %} {% block pagehead %}
 
+
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
     crossorigin="anonymous"> -->
 
 <link rel="stylesheet" type="text/css" href="/static/vnaControl/vna.css"> {% endblock %} {% block content %}
 <!--Begin by Introducing the user to the purpose of the web app-->
+<div class="loaderOverlay", id="loader" style="display:none;"></div>
 
 <div class="topbar">
 
@@ -20,82 +22,70 @@
     <h3 class="headerTHREE">Logged in as {{user}}</h3>
 
 </div>
-
+<h3 class="headerTHREE" style="color:red;">Currently {{connection}} {{vna_idn}}</h3>
 <div style="width: 100%; text-align: center; margin-top:50px;">
+        <div style="display: inline-block; vertical-align: top;">
+
+        <button type="button" class="boxheader" value="+" onclick="toggleId('Parameters',this)" style="width:500px;">
+            Parameter Selection
+        </button>
+
+        <div class="informationbox" id="Parameters">
+            <div style="text-align: left; padding: 25px; padding-top: 5px;">
+                <form id="ParameterSelectionForm" enctype="multipart/form-data" style="">
+                    <select id="ParameterSelection" name="ParameterSelection">
+                        <option name="ParameterSelection" id="s1p" 	value="s1p" disabled>One Port Scattering Parameters (s1p)</option>
+                        <option name="ParameterSelection" id="s2p" value ="s2p" selected>Two Port Scattering Parameters (s2p)</option>
+                        <option name="ParameterSelection" id="w1p"	value="w1p" disabled>One Port Wave Parameters (w1p)</option>
+                        <option name="ParameterSelection" id="w2p"	value="w2p" disabled>Two Port Wave Parameters (w2p)</option>
+                        <option name="ParameterSelection" id="SwitchTerms"	value="switch" disabled>Switch Terms (s2p)</option>
+                    </select>
+                    <!--Put port selection select here-->
+
+                </form>
+                <input id="initialize" type="button" value="Initialize VNA" class="buttonA"/>
+            <p id="initialized" style="color:red;"></p>
+            </div>
+        </div>
+
+    </div>
     <div style="display: inline-block; vertical-align: top;">
 
         <button type="button" class="boxheader" value="+" onclick="toggleId('VNASetup',this)" style="width:500px;">
             VNA Setup
         </button>
 
-        <div class="informationbox" id="VNASetup" style="height: 350px;">
+        <div class="informationbox" id="VNASetup">
             <div style="text-align: left; padding: 25px; padding-top: 5px;">
-                <label class="radio">
-                    <input type="radio" name="setup" id="CurrentSetUp" value="False" onclick="hideOnCheck('CurrentSetUp','VNASetupForm')" />
-                    <span>Use the current Instrument State</span>
-                </label>
-                <label class="radio">
-                    <input type="radio" name="setup" id="UserSetup" value="True" onclick="showOnCheck('UserSetup','VNASetupForm')" />
-                    <span>Setup the VNA</span>
-                </label>
 
-            </div>
-
-            <br/>
-            <!-- If the user selects Setup The VNA then give some basic choices -->
-            <form id="VNASetupForm" style="display:none;">
-
-                <label for="IFBW">IFBW</label>
-                <input type="number" name="IFBW" value="10" id="IFBW" />
-
+                <label for="UserSetUp">Use the current instrument state</label>
+                <input type="radio" name="UserSetUp" id="CurrentSetUp" value="False" onclick="hideOnCheck('CurrentSetUp','VNASetupForm')"
+                    checked/>
+                <label for="UserSetUp">Setup The VNA</label>
+                <input type="radio" name="UserSetUp" id="UserSetup" value="True" onclick="showOnCheck('UserSetup','VNASetupForm')" />
                 <br/>
-                <label for="CorrectionOn">Correction</label>
-                <input type="checkbox" id="CorrectionOn" onclick="showOnCheck('CorrectionOn','CorrectionText')">
-                <p id="CorrectionText" style="display:none;color:red;">Correction is On</p>
-                <br/>
-                <div style="text-align: center">
-                    <input id="setupVNA" type="button" value="Setup" class="buttonA">
+                <!-- If the user selects Setup The VNA then give some basic choices -->
+                <form id="VNASetupForm" style="display:none;">
+
+                    <label for="IFBW">IFBW</label>
+                    <input type="number" name="IFBW" value="10" id="IFBW" />
+
+                    <br/>
+                    <label for="CorrectionOn">Correction</label>
+                    <input name="CorrectionOn" type="checkbox" id="CorrectionOn" onclick="showOnCheck('CorrectionOn','CorrectionText')" value="1">
+                    <span id="CorrectionText" style="display:none;color:red;">Correction is On</span>
+                    <br/>
+                    <div style="text-align: center">
+                        <input id="setupVNA" type="button" value="Setup" class="buttonA">
                 </div>
 
-            </form>
-            <hr/>
-        </div>
-    </div>
-
-    <div style="display: inline-block; vertical-align: top;">
-
-        <button type="button" class="boxheader" value="+" onclick="toggleId('ParametersConnector',this)" style="width:500px;">
-            Parameter Selection
-        </button>
-
-        <div class="informationbox" id="ParametersConnector">
-            <div style="text-align: left; padding: 25px; padding-top: 5px;">
-                <form id="ParameterSelectionForm" style="">
-                    <select>
-                        <option type="radio" name="ParameterSelection" id="s1p">One Port Scattering Parameters (s1p)</option>
-                        <option name="ParameterSelection" id="s2p">Two Port Scattering Parameters (s2p)</option>
-                        <option name="ParameterSelection" id="w1p">One Port Wave Parameters (w1p)</option>
-                        <option name="ParameterSelection" id="w2p">Two Port Wave Parameters (w2p)</option>
-                    </select>
-                    <!--Put port selection select here-->
                 </form>
-
-                <form id="MetaData">
-                    <label for="ConnectorType">Connector Type </label>
-                    <select id="ConnectorType">
-                        <option value="TypeN">Type N</option>
-                        <option value="3.5mm">3.5 mm</option>
-                        <option value="2.4mm">2.4 mm</option>
-                        <option value="2.92mm">2.92 mm</option>
-                        <option value="1.85mm">1.85 mm</option>
-                        <option value="1mm">1 mm</option>
-                        <option value="OnWafer">On Wafer</option>
-                    </select>
-                </form>
+                <hr/>
             </div>
         </div>
-
     </div>
+
+
 
 
     <div style="display: inline-block; vertical-align: top;">
@@ -104,13 +94,66 @@
             Frequency
         </button>
 
-        <div class="informationbox" id="Freq">
+        <div class="informationbox" id="Freq" >
             <div style="text-align: left; padding: 25px; padding-top: 5px;">
+
+                <label for="CurrentFrequency">Use the frequency list</label>
+                <input type="radio" name="UserSetFrequency" id="CurrentFrequency" value="False" onclick="hideOnCheck('CurrentFrequency','freqSweepForm')"
+                    checked/>
+                <label for="UserFrequency">Set the frequency sweep</label>
+                <input type="radio" name="UserSetFrequency" id="UserFrequency" value="True" onclick="showOnCheck('UserFrequency','freqSweepForm')" />
+                <br/>
+                <form id="freqSweepForm" style="display:none;">
+                <label for="sweepType">Sweep Type</label>
+                <select id="sweepType" name="sweepType">
+                    <option name="sweepType" value="LIN">Linear</option>
+                    <option name="sweepType" value="LOG">Log</option>
+                </select>
+                 <br/>
+                <label for="sweepStart">Start</label>
+                <input type="number" value="200E6" id="sweepStart" name="sweepStart"/>
+                <br/>
+                <label for="sweepStop">Stop</label>
+                <input type="number" value="67E9" id="sweepStop" name="sweepStop"/>
+                <br/>
+                <label for="numberPoints">Number of Points</label>
+                <input type="number" value="201" id="numberPoints" name="numberPoints"/>
+
+                <input id="setFrequency" type="button" value="Set Frequency" class="buttonA">
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div style="display: inline-block; vertical-align: top;">
+
+        <button type="button" class="boxheader" value="+" onclick="toggleId('Metadata',this)" style="width:500px;">
+            Metadata
+        </button>
+
+        <div class="informationbox" id="Metadata">
+            <div style="text-align: left; padding: 25px; padding-top: 5px;">
+                <form id="value-submit">
+                    <label for="ConnectorType">Connector Type </label>
+                    <select id="ConnectorType" name="ConnectorType" >
+                        <option value="TypeN">Type N</option>
+                        <option value="3.5mm">3.5 mm</option>
+                        <option value="2.4mm">2.4 mm</option>
+                        <option value="2.92mm">2.92 mm</option>
+                        <option value="1.85mm">1.85 mm</option>
+                        <option value="1mm">1 mm</option>
+                        <option value="OnWafer">On Wafer</option>
+                    </select><br/>
+                    <label for="sampleNameInput">Sample or Device Name</label>
+                    <input type="text" name="sampleNameInput" id="sampleNameInput" />
+                    <br/>
+                    <label for="notesInput">Notes</label>
+                    <input type="text" name="notesInput" id="notesInput" />
+                </form>
 
             </div>
         </div>
     </div>
-
     <div style="display: inline-block; vertical-align: top;">
 
         <button type="button" class="boxheader" value="+" onclick="toggleId('Acq',this)" style="width:500px;">
@@ -120,22 +163,22 @@
         <div class="informationbox" id="Acq">
 
             <input id="submitButton" type="submit" value="Take Data" class="buttonA">
-
+            {% autoescape off%}
+            <div id="thumbnailDisplay"></div>
+            {% endautoescape%}
         </div>
     </div>
 
 
-</div>
 
 
 
 
-{% autoescape off%}
 
 
-<div style="width: 100%; text-align: center; margin-top:50px;">
+<div style="display: inline-block; vertical-align: top;">
     <button type="button" class="boxheader" value="+" onclick="toggleId('downloadSection',this)" style="width:500px;">
-        Acquire Data
+        Download Data
     </button>
 
     <div class="informationbox" id="downloadSection">
@@ -159,7 +202,24 @@
 
 </div>
 
+    <div style="display: inline-block; vertical-align: top;">
+    <button type="button" class="boxheader" value="+" onclick="toggleId('viewSection',this)" style="width:500px;">
+        View Data
+    </button>
 
+    <div class="informationbox" id="viewSection">
+        {% autoescape off%}
+        <div style="text-align: left; padding: 25px; padding-top: 5px;" id="interactiveView">
+            <h3>No Data to Display</h3>
+
+
+        </div>
+        {% endautoescape %}
+    </div>
+
+</div>
+</div>
+{% autoescape off%}
 
 
 <script>
@@ -207,6 +267,12 @@
 </script>
 
 <script>
+
+function joinFormData(formData1,formData2) {
+for (var p of myFormData){
+formData.append(p.key,p.value);
+}
+}
     //using jQuery
     // Function to recover the cookie delivered by Django
     function getCookie(name) {
@@ -234,15 +300,98 @@
         posturl = "{% url 'vnaControl' %}";
         url = "{% static 'Test_App/img'%}";
 
-        toggleId("VNASetup", self)
+        /*toggleId("VNASetup", self)
         toggleId("ParametersConnector", self)
-        toggleId("Freq", self)
+        toggleId("Freq", self)*/
 
+        // Ajax call for initialize
+        $('#initialize').click(function (e) {
+            e.preventDefault();
+            var button = document.getElementById('initialize');
+            button.disabled = true;
+            document.getElementById("loader").style.display = 'block';
+            var request = new XMLHttpRequest();
+            var form = document.getElementById('ParameterSelectionForm')
+            var formData = new FormData(form);
+            request.open("POST", posturl, true);
+            //append the data you want to send to the server here
+            formData.append("csrfmiddlewaretoken", csrftoken); // This works, I am not sure why the header method does not
+            formData.append("id", "ParameterSelectionForm");
+            request.send(formData);
+
+            // This executes the function on response from server
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //console.log(this.responseText);
+                    var response = JSON.parse(this.responseText);
+                    document.getElementById("initialized").innerHTML = response['initialized'];
+                    var button = document.getElementById('initialize');
+                    button.disabled = false
+                    document.getElementById("loader").style.display = 'none';
+
+                };
+            };
+            });
+        $('#setupVNA').click(function (e) {
+            e.preventDefault();
+            var button = document.getElementById('setupVNA');
+            button.disabled = true;
+            document.getElementById("loader").style.display = 'block';
+            var request = new XMLHttpRequest();
+            var form = document.getElementById('VNASetupForm')
+            var formData = new FormData(form);
+            request.open("POST", posturl, true);
+            //append the data you want to send to the server here
+            formData.append("csrfmiddlewaretoken", csrftoken); // This works, I am not sure why the header method does not
+            formData.append("id", "VNASetupForm");
+            request.send(formData);
+
+            // This executes the function on response from server
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //console.log(this.responseText);
+                    // No response right now
+                    var response = JSON.parse(this.responseText);
+                    var button = document.getElementById('setupVNA');
+                    button.disabled = false;
+                    document.getElementById("loader").style.display = 'none';
+
+                };
+            };
+            });
+        $('#setFrequency').click(function (e) {
+            e.preventDefault();
+            var button = document.getElementById('setFrequency');
+            button.disabled = true;
+            document.getElementById("loader").style.display = 'block';
+            var request = new XMLHttpRequest();
+            var form = document.getElementById('freqSweepForm')
+            var formData = new FormData(form);
+            request.open("POST", posturl, true);
+            //append the data you want to send to the server here
+            formData.append("csrfmiddlewaretoken", csrftoken); // This works, I am not sure why the header method does not
+            formData.append("id", "freqSweepForm");
+            request.send(formData);
+
+            // This executes the function on response from server
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //console.log(this.responseText);
+                    // No response right now
+                    var response = JSON.parse(this.responseText);
+                    var button = document.getElementById('setFrequency');
+                    button.disabled = false;
+                    document.getElementById("loader").style.display = 'none';
+
+                };
+            };
+            });
         // Ajax call for the submit button
         $('#submitButton').click(function (e) {
             e.preventDefault();
             var button = document.getElementById('submitButton');
             button.disabled = true
+            document.getElementById("loader").style.display = 'block';
             var request = new XMLHttpRequest();
             var form = document.getElementById('value-submit')
             var formData = new FormData(form)
@@ -257,18 +406,19 @@
                 if (this.readyState == 4 && this.status == 200) {
                     //console.log(this.responseText);
                     var response = JSON.parse(this.responseText);
-                    document.getElementById("demo").innerHTML = response['content'];
-                    document.getElementById("link").innerHTML = response['download_link'];
-                    document.getElementById("measurementDownload").innerHTML = response['measurement_download_link'];
-                    document.getElementById("stateDownload").innerHTML = response['state_download_link'];
-                    document.getElementById("completeDownload").innerHTML = response['complete_download_link'];
+                    document.getElementById("thumbnailDisplay").innerHTML = response['thumbnailDisplay'];
+                    document.getElementById("interactiveView").innerHTML = response['interactiveView'];
+                    document.getElementById("measurementDownload").innerHTML = response['measurementDownload'];
+                    document.getElementById("stateDownload").innerHTML = response['stateDownload'];
+                    document.getElementById("completeDownload").innerHTML = response['completeDownload'];
                     var button = document.getElementById('submitButton');
                     button.disabled = false
+                    document.getElementById("loader").style.display = 'none';
 
                 }
             };
         });
-
+/*
         $('#setupVNA').click(function (e) {
             var posturl;
             posturl = "{% url 'vnaControl' %}";
@@ -282,15 +432,7 @@
             formData.append("id", "setupVNA");
             request.send(formData);
 
-            request.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    //console.log(this.responseText);
-                    var response = JSON.parse(this.responseText);
-                    alert("VNA Created, with Information: " + response["vna"])
-                }
-            }
-
-        });
+        });*/
 
     });
 
